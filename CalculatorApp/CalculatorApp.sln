@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.BusinessLogic", "Calculator.BusinessLogic\Calculator.BusinessLogic.csproj", "{780829CB-3A50-441D-88A7-0D9A07FEA92E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.BusinessLogic.Tests", "Calculator.BusinessLogic.Tests\Calculator.BusinessLogic.Tests.csproj", "{D75FF086-B239-4975-80A7-7FAEE9FE44BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{780829CB-3A50-441D-88A7-0D9A07FEA92E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{780829CB-3A50-441D-88A7-0D9A07FEA92E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{780829CB-3A50-441D-88A7-0D9A07FEA92E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D75FF086-B239-4975-80A7-7FAEE9FE44BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D75FF086-B239-4975-80A7-7FAEE9FE44BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D75FF086-B239-4975-80A7-7FAEE9FE44BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D75FF086-B239-4975-80A7-7FAEE9FE44BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
