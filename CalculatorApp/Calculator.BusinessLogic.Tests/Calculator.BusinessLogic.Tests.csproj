@@ -69,10 +69,25 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="CalculatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Calculator.BusinessLogic\Calculator.BusinessLogic.csproj">
+      <Project>{780829cb-3a50-441d-88a7-0d9a07fea92e}</Project>
+      <Name>Calculator.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Calculator.Domain\Calculator.Domain.csproj">
+      <Project>{f32d85c4-c0e1-45a6-b2ec-25ef798d7241}</Project>
+      <Name>Calculator.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Calculator.Services\Calculator.Services.csproj">
+      <Project>{52317683-a8cc-4b1c-a296-becd81e03283}</Project>
+      <Name>Calculator.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
