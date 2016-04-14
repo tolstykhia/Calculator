@@ -9,44 +9,129 @@ using Calculator.BusinessLogic;
 using Calculator.Domain;
 using Calculator.Services;
 using Moq;
+using Xunit.Extensions;
 
 namespace Calculator.BusinessLogic.Tests
 {
+
     public class CalculatorTest
     {
+        public static IEnumerable<object[]> GetExpressions()
+        {
+            yield return new object[]
+            {
+                "(24+3*2)/(-2)-3*(1-2)",
+                -12,
+                new ArithmeticExpression()
+                {
+                    x = null,
+                    y = null,
+                    Operator = OperationType.Subtraction,
+                    ExpressionX = new ArithmeticExpression()
+                    {
+                        x = null,
+                        y = -2,
+                        Operator = OperationType.Division,
+                        ExpressionX = new ArithmeticExpression()
+                        {
+                            x = 24,
+                            y = null,
+                            Operator = OperationType.Sum,
+                            ExpressionX = null,
+                            ExpressionY = new ArithmeticExpression()
+                            {
+                                x = 3,
+                                y = 2,
+                                Operator = OperationType.Multiplication,
+                                ExpressionX = null,
+                                ExpressionY = null
+                            }
+                        },
+                        ExpressionY = null
+                    },
+                    ExpressionY = new ArithmeticExpression()
+                    {
+                        x = 3,
+                        y = null,
+                        Operator = OperationType.Multiplication,
+                        ExpressionX = null,
+                        ExpressionY = new ArithmeticExpression()
+                        {
+                            x = 1,
+                            y = 2,
+                            Operator = OperationType.Subtraction,
+                            ExpressionX = null,
+                            ExpressionY = null
+                        }
+                    }
+                }
+            };
+            yield return new object[]
+            {
+                "((-3.5)-3/2)*2.5+3/(1+2)",
+                -11.5,
+                new ArithmeticExpression()
+                {
+                    x = null,
+                    y = null,
+                    Operator = OperationType.Sum,
+                    ExpressionX = new ArithmeticExpression()
+                    {
+                        x = null,
+                        y = 2.5m,
+                        Operator = OperationType.Multiplication,
+                        ExpressionX = new ArithmeticExpression()
+                        {
+                            x = -3.5m,
+                            y = null,
+                            Operator = OperationType.Subtraction,
+                            ExpressionX = null,
+                            ExpressionY = new ArithmeticExpression()
+                            {
+                                x = 3,
+                                y = 2,
+                                Operator = OperationType.Division,
+                                ExpressionX = null,
+                                ExpressionY = null
+                            }
+                        },
+                        ExpressionY = null
+                    },
+                    ExpressionY = new ArithmeticExpression()
+                    {
+                        x = 3,
+                        y = null,
+                        Operator = OperationType.Division,
+                        ExpressionX = null,
+                        ExpressionY = new ArithmeticExpression()
+                        {
+                            x = 1,
+                            y = 2,
+                            Operator = OperationType.Sum,
+                            ExpressionX = null,
+                            ExpressionY = null
+                        }
+                    }
+                }
+            };
+        }
+
         [Theory]
-        [InlineData("2+2", 4)]
-        [InlineData("-2+(-2)", -4)]
-        [InlineData("(-2)+(-2.5)", -4.5)]
-        [InlineData("-2,5+2", -0.5)]
-        public void ReturnSumTwoNumbers(String expressionStr, Decimal expectedSum)
+        [MemberData("GetExpressions")]
+        public void ReturnDecisionOfArithmeticExpression(String expressionStr, Decimal expectedResult, ArithmeticExpression arithExpression)
         {
             //averrage
-            var numbers = GetNumbers(expressionStr);
-
             var calculatorParser = new Mock<ICalculatorParser>();
-            calculatorParser.Setup(x => x.Parse(expressionStr)).Returns(new ArithmeticExpression() { x = numbers[0], y = numbers[1], Operator = OperationType.Sum});
+            calculatorParser.Setup(x => x.Parse(expressionStr)).Returns(arithExpression);
 
             var calculator = new CalculatorExecuter(calculatorParser.Object);
 
             //act
-            var sum = calculator.GetDecision(expressionStr);
+            var result = calculator.GetDecision(expressionStr);
 
             //assert
-            Assert.Equal(expectedSum, sum);
+            Assert.Equal(expectedResult, result);
         }
-
-        private List<Decimal> GetNumbers(String expressionStr)
-        {
-            var rgx = new Regex(@"\(?\-?\d+(\.|\,)?\d*\)?");
-            var matches = rgx.Matches(expressionStr);
-            var values = new List<String>(2);
-            for (int i = 0; i < matches.Count; i++)
-            {
-                values.Add(matches[i].Value.Replace("(", "").Replace(")", "").Replace(".", ","));
-            }
-
-            return values.Select(Decimal.Parse).ToList();
-        }
+        
     }
 }

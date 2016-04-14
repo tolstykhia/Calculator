@@ -17,20 +17,35 @@ namespace Calculator.BusinessLogic
             _calculatorParser = calculatorParser;
         }
 
-        public Decimal Sum(Decimal x, Decimal y)
+        public Decimal? GetDecision(String expressionStr)
         {
-            return x + y;
-        }
-
-        public Decimal GetDecision(String expressionStr)
-        {
-            Decimal result = 0m;
             var expression = _calculatorParser.Parse(expressionStr);
 
-            if (expression.Operator == OperationType.Sum)
-                result = Sum(expression.x, expression.y);
+            return GetResult(expression);
+        }
 
-            return result;
+        private Decimal? GetResult(ArithmeticExpression expression)
+        {
+            var x = expression.x;
+            var y = expression.y;
+            if (x == null)
+                x = GetResult(expression.ExpressionX);
+            if (y == null)
+                y = GetResult(expression.ExpressionY);
+
+            switch (expression.Operator)
+            {
+                case OperationType.Sum:
+                    return x + y;
+                case OperationType.Subtraction:
+                    return x - y;
+                case OperationType.Multiplication:
+                    return x * y;
+                case OperationType.Division:
+                    return y != 0 ? x / y : null;
+                default:
+                    return null;
+            }
         }
     }
 }
