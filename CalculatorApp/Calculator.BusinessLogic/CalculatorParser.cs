@@ -13,24 +13,30 @@ namespace Calculator.BusinessLogic
     {
         private readonly String _standartNumberPattern;
         private readonly String _standartArithOperationPattern;
+        private readonly Regex _standartArithOperationRegex;
+        private readonly Regex _standartNumberRegex;
+        private List<String> _postfixExpression;
 
         public CalculatorParser()
         {
             this._standartNumberPattern = @"(?'Open'\(\-)?\d+(\.|\,)?\d*(?'Close-Open'\))?(?(Open)(?!))";
             this._standartArithOperationPattern = @"(\+|\-|\*|\/)+";
+            this._standartNumberRegex = new Regex(_standartNumberPattern);
+            this._standartArithOperationRegex = new Regex(_standartArithOperationPattern);
+            this._postfixExpression = new List<String>();
         }
 
         public List<String> ConvertToPostfixNotation(String expression)
         {
             var result = new List<String>();
-            var rgx = new Regex(@"(" + _standartNumberPattern + @"|\(|\)|" + _standartArithOperationPattern + @")");
+            var rgx = new Regex(@"(" + _standartNumberPattern + @"|" + _standartArithOperationPattern + @"|\(|\))");
             var matches = rgx.Matches(expression);
 
             var arithOpStack = new List<String>();
 
             foreach (Match match in matches)
             {
-                if (new Regex(_standartNumberPattern).IsMatch(match.Value))
+                if (_standartNumberRegex.IsMatch(match.Value))
                 {
                     result.Add(match.Value);
                     continue;
@@ -60,7 +66,7 @@ namespace Calculator.BusinessLogic
                     continue;
                 }
 
-                if (new Regex(_standartArithOperationPattern).IsMatch(match.Value))
+                if (_standartArithOperationRegex.IsMatch(match.Value))
                 {
                     var operationPreority = GetOperation(match.Value);
 
@@ -90,21 +96,91 @@ namespace Calculator.BusinessLogic
             return result;
         }
 
+        public ArithmeticExpression Parse(string expression)
+        {
+            this._postfixExpression = ConvertToPostfixNotation(expression);
+
+            Int32 outIndex;
+            var result = GetArithmeticExpression(null, _postfixExpression.Count - 1, out outIndex);
+
+            return result;
+        }
+
+        private ArithmeticExpression GetArithmeticExpression(ArithmeticExpression result, Int32 index, out Int32 outIndex)
+        {
+            outIndex = index;
+            if (index < 0) return result;
+
+            if (_standartArithOperationRegex.IsMatch(_postfixExpression[index]) && !_standartNumberRegex.IsMatch(_postfixExpression[index]))
+            {
+                if (result == null)
+                {
+                    result = GetSubArithmeticExpression(index, out outIndex);
+                }
+                else
+                {
+                    if (result.ExpressionY == null && result.y == null)
+                    {
+                        result.ExpressionY = GetSubArithmeticExpression(index, out outIndex);
+                    }
+                    else
+                    {
+                        if (result.ExpressionX == null && result.x == null)
+                        {
+                            result.ExpressionX = GetSubArithmeticExpression(index, out outIndex);
+                        }
+                    }
+                }
+
+                index = outIndex;
+
+                if (index >= 0 && result.x == null && result.ExpressionX == null || result.y == null && result.ExpressionY == null)
+                {
+                    result = GetArithmeticExpression(result, index, out outIndex);
+                    index = outIndex;
+                    if (index < 0) return result;
+                }
+                else return result;
+            }
+
+            if (_standartNumberRegex.IsMatch(_postfixExpression[index]))
+            {
+                Decimal decimalValue;
+
+                Decimal.TryParse(_postfixExpression[index].Replace("(", "").Replace(")", "").Replace(".", ","), out decimalValue);
+
+                if (result.y == null && result.ExpressionY == null)
+                {
+                    result.y = decimalValue;
+                    return GetArithmeticExpression(result, index - 1, out outIndex);
+                }
+                if (result.x == null && result.ExpressionX == null)
+                {
+                    result.x = decimalValue;
+                    outIndex = index - 1;
+                    return result;
+                }
+            }
+
+            return result;
+        }
+
+        private ArithmeticExpression GetSubArithmeticExpression(Int32 index, out Int32 outIndex)
+        {
+            var result = new ArithmeticExpression() { Operator = GetOperation(_postfixExpression[index]) };
+            return GetArithmeticExpression(result, index - 1, out outIndex);
+        }
+
         private OperationType GetOperation(String operationStr)
         {
             switch (operationStr)
             {
                 case "+": return OperationType.Sum;
                 case "-": return OperationType.Subtraction;
-                case "*": return OperationType.Multiplication; 
+                case "*": return OperationType.Multiplication;
                 case "/": return OperationType.Division;
                 default: return OperationType.None;
             }
-        }
-
-        public ArithmeticExpression Parse(string expression)
-        {
-            return new ArithmeticExpression();
         }
     }
 }

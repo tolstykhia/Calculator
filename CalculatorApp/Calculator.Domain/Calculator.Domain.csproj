@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArithmeticExpression.cs" />
+    <Compile Include="ArithmeticExpressionComparer .cs" />
     <Compile Include="OperationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
