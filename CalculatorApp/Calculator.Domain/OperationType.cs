@@ -8,12 +8,14 @@ namespace Calculator.Domain
 {
     public enum OperationType
     {
-        Sum = 1,
+        None = 0,
 
-        Subtraction = 2,
+        Subtraction = 4,
+        
+        Sum = 3,
 
-        Multiplication = 3,
+        Division = 2,
 
-        Division = 4
+        Multiplication = 1
     }
 }
