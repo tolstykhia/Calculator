@@ -16,11 +16,20 @@ namespace Calculator.BusinessLogic
         private readonly Regex _standartArithOperationRegex;
         private readonly Regex _standartNumberRegex;
         private List<String> _postfixExpression;
+        private readonly  List<Operation> _operations = new List<Operation>()
+        {
+            new Operation(){Description = "+", Priority = 2},
+            new Operation(){Description = "-", Priority = 2},
+            new Operation(){Description = "*", Priority = 1},
+            new Operation(){Description = "/", Priority = 1},
+        }; 
 
         public CalculatorParser()
         {
             this._standartNumberPattern = @"(?'Open'\(\-)?\d+(\.|\,)?\d*(?'Close-Open'\))?(?(Open)(?!))";
-            this._standartArithOperationPattern = @"(\+|\-|\*|\/)+";
+            var tmpOperationStr = @"(";
+            _operations.ForEach(x => tmpOperationStr += @"\" + x.Description + (_operations.IndexOf(x) != _operations.Count - 1 ? @"|" : @")+"));
+            this._standartArithOperationPattern = tmpOperationStr;
             this._standartNumberRegex = new Regex(_standartNumberPattern);
             this._standartArithOperationRegex = new Regex(_standartArithOperationPattern);
             this._postfixExpression = new List<String>();
@@ -68,12 +77,12 @@ namespace Calculator.BusinessLogic
 
                 if (_standartArithOperationRegex.IsMatch(match.Value))
                 {
-                    var operationPreority = GetOperation(match.Value);
+                    var operationPreority = GetPriority(match.Value);
 
                     for (int i = arithOpStack.Count - 1; i >= 0; i--)
                     {
                         if (arithOpStack[i] == "(") break;
-                        if ((int) GetOperation(arithOpStack[i]) <= (int) operationPreority)
+                        if (GetPriority(arithOpStack[i]) <= operationPreority)
                         {
                             result.Add(arithOpStack[i]);
                             arithOpStack.RemoveAt(i);
@@ -171,16 +180,14 @@ namespace Calculator.BusinessLogic
             return GetArithmeticExpression(result, index - 1, out outIndex);
         }
 
-        private OperationType GetOperation(String operationStr)
+        private Operation GetOperation(String operationStr)
         {
-            switch (operationStr)
-            {
-                case "+": return OperationType.Sum;
-                case "-": return OperationType.Subtraction;
-                case "*": return OperationType.Multiplication;
-                case "/": return OperationType.Division;
-                default: return OperationType.None;
-            }
+            return _operations.FirstOrDefault(x => x.Description == operationStr);
+        }
+
+        private Int32 GetPriority(String operationStr)
+        {
+            return _operations.Where(x => x.Description == operationStr).Select(x => x.Priority).FirstOrDefault();
         }
     }
 }

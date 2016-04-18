@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="ArithmeticExpression.cs" />
     <Compile Include="ArithmeticExpressionComparer .cs" />
-    <Compile Include="OperationType.cs" />
+    <Compile Include="Operation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

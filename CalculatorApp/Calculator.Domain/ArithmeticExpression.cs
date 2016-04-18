@@ -12,7 +12,7 @@ namespace Calculator.Domain
         public Decimal? x { get; set; }
         public Decimal? y { get; set; }
 
-        public OperationType Operator { get; set; }
+        public Operation Operator { get; set; }
 
         public ArithmeticExpression ExpressionX { get; set; }
 

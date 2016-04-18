@@ -33,15 +33,15 @@ namespace Calculator.BusinessLogic
             if (y == null)
                 y = GetResult(expression.ExpressionY);
 
-            switch (expression.Operator)
+            switch (expression.Operator.Description)
             {
-                case OperationType.Sum:
+                case "+":
                     return x + y;
-                case OperationType.Subtraction:
+                case "-":
                     return x - y;
-                case OperationType.Multiplication:
+                case "*":
                     return x * y;
-                case OperationType.Division:
+                case "/":
                     return y != 0 ? x / y : null;
                 default:
                     return null;

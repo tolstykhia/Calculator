@@ -6,16 +6,10 @@ using System.Threading.Tasks;
 
 namespace Calculator.Domain
 {
-    public enum OperationType
+    public class Operation
     {
-        None = 0,
+        public String Description { get; set; }
 
-        Subtraction = 4,
-        
-        Sum = 3,
-
-        Division = 2,
-
-        Multiplication = 1
+        public Int32 Priority { get; set; }
     }
 }

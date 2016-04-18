@@ -26,23 +26,23 @@ namespace Calculator.BusinessLogic.Tests
                 {
                     x = null,
                     y = null,
-                    Operator = OperationType.Subtraction,
+                    Operator = new Operation(){Description = "-", Priority = 2},
                     ExpressionX = new ArithmeticExpression()
                     {
                         x = null,
                         y = -2,
-                        Operator = OperationType.Division,
+                        Operator = new Operation(){Description = "/", Priority = 1},
                         ExpressionX = new ArithmeticExpression()
                         {
                             x = 24,
                             y = null,
-                            Operator = OperationType.Sum,
+                            Operator = new Operation(){Description = "+", Priority = 2},
                             ExpressionX = null,
                             ExpressionY = new ArithmeticExpression()
                             {
                                 x = 3,
                                 y = 2,
-                                Operator = OperationType.Multiplication,
+                                Operator = new Operation(){Description = "*", Priority = 1},
                                 ExpressionX = null,
                                 ExpressionY = null
                             }
@@ -53,13 +53,13 @@ namespace Calculator.BusinessLogic.Tests
                     {
                         x = 3,
                         y = null,
-                        Operator = OperationType.Multiplication,
+                        Operator = new Operation(){Description = "*", Priority = 1},
                         ExpressionX = null,
                         ExpressionY = new ArithmeticExpression()
                         {
                             x = 1,
                             y = 2,
-                            Operator = OperationType.Subtraction,
+                            Operator = new Operation(){Description = "-", Priority = 2},
                             ExpressionX = null,
                             ExpressionY = null
                         }
@@ -74,23 +74,23 @@ namespace Calculator.BusinessLogic.Tests
                 {
                     x = null,
                     y = null,
-                    Operator = OperationType.Sum,
+                    Operator = new Operation(){Description = "+", Priority = 2},
                     ExpressionX = new ArithmeticExpression()
                     {
                         x = null,
                         y = 2.5m,
-                        Operator = OperationType.Multiplication,
+                        Operator = new Operation(){Description = "*", Priority = 1},
                         ExpressionX = new ArithmeticExpression()
                         {
                             x = -3.5m,
                             y = null,
-                            Operator = OperationType.Subtraction,
+                            Operator = new Operation(){Description = "-", Priority = 2},
                             ExpressionX = null,
                             ExpressionY = new ArithmeticExpression()
                             {
                                 x = 3,
                                 y = 2,
-                                Operator = OperationType.Division,
+                                Operator = new Operation(){Description = "/", Priority = 1},
                                 ExpressionX = null,
                                 ExpressionY = null
                             }
@@ -101,13 +101,13 @@ namespace Calculator.BusinessLogic.Tests
                     {
                         x = 3,
                         y = null,
-                        Operator = OperationType.Division,
+                        Operator = new Operation(){Description = "/", Priority = 1},
                         ExpressionX = null,
                         ExpressionY = new ArithmeticExpression()
                         {
                             x = 1,
                             y = 2,
-                            Operator = OperationType.Sum,
+                            Operator = new Operation(){Description = "+", Priority = 2},
                             ExpressionX = null,
                             ExpressionY = null
                         }
