@@ -46,6 +46,8 @@ namespace Calculator.BusinessLogic
                     return x * y;
                 case "/":
                     return y != 0 ? x / y : null;
+                case "^":
+                    return (Decimal?) Math.Pow((double)x, (double)y);
                 default:
                     return null;
             }

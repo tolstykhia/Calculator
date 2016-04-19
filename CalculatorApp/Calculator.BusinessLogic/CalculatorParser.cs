@@ -22,6 +22,7 @@ namespace Calculator.BusinessLogic
             new Operation(){Description = "-", Priority = 2},
             new Operation(){Description = "*", Priority = 1},
             new Operation(){Description = "/", Priority = 1},
+            new Operation(){Description = "^", Priority = 0},
         }; 
 
         public CalculatorParser()
