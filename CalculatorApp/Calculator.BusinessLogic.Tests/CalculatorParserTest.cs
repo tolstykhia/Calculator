@@ -19,8 +19,8 @@ namespace Calculator.BusinessLogic.Tests
             };
             yield return new object[]
             {
-                "3+4*2/(1-5)",
-                new List<String>() {"3","4","2","*","1","5","-","/","+"} 
+                "-3+4*2/(1-5)",
+                new List<String>() {"0","3","-","4","2","*","1","5","-","/","+"} 
             };
             yield return new object[]
             {

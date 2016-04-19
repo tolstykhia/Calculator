@@ -46,7 +46,9 @@ namespace Calculator.BusinessLogic
             if (matches[startIdex].Value == "-")
             {
                 result.Add("0");
-                startIdex = 1;
+                result.Add(matches[1].Value);
+                result.Add("-");
+                startIdex = 2;
             }
 
             for (int j = startIdex; j < matches.Count; j++)
@@ -83,11 +85,25 @@ namespace Calculator.BusinessLogic
 
                 if (_standartArithOperationRegex.IsMatch(matches[j].Value))
                 {
-                    if (matches[j].Value == "-" && (_standartArithOperationRegex.IsMatch(matches[j-1].Value) || matches[j-1].Value=="("))  //arithOpStack[arithOpStack.Count-1] == "(" && (result.Count == 0 || result[result.Count-1] != "0" && result[result.Count-1] != matches[j-1].Value))
+                    if (matches[j].Value == "-" &&
+                        (_standartArithOperationRegex.IsMatch(matches[j - 1].Value) || matches[j - 1].Value == "("))
                     {
-                            result.Add("0");
-                            arithOpStack.Add(matches[j].Value);
-                        continue;
+                        result.Add("0");
+                        Int32 countUnMinus = 1;
+                        while (!_standartNumberRegex.IsMatch(matches[j + 1].Value))
+                        {
+                            if (matches[j + 1].Value == "-")
+                                countUnMinus++;
+                            else break;
+                            j++;
+                        }
+                        if (_standartNumberRegex.IsMatch(matches[j + 1].Value))
+                        {
+                            result.Add(matches[j + 1].Value);
+                            result.Add(countUnMinus % 2 == 0 ? "+" : "-");
+                            j++;
+                            continue;
+                        }
                     }
 
                     var operationPreority = GetPriority(matches[j].Value);
@@ -120,6 +136,7 @@ namespace Calculator.BusinessLogic
 
         public ArithmeticExpression Parse(string expression)
         {
+            expression = expression.Replace(" ", "");
             if (!IsValidExpression(expression)) return null;
 
             this._postfixExpression = ConvertToPostfixNotation(expression);
