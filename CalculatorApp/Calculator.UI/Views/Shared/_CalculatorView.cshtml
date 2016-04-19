@@ -1,0 +1,33 @@
+﻿
+<div id="expressionStr" style="display: none"></div>
+@Html.TextBox("expression", "")
+
+<button class="ui-button-text" onclick="getDicision()">Решить</button>
+
+<script>
+        var expression = document.getElementById('expression');
+
+        expression.oninput = function() {
+            $("#expressionStr").hide();
+            $("#expressionStr").text($(this).val());
+        };
+
+        function getDicision() {
+            var expression = $("#expression").val();
+            $.ajax({
+                type: 'Get',
+                url: '@Url.Action("GetDecision", "Calculator")',
+                data: { expression: expression },
+                success: function(result) {
+                    if (result === "Error") {
+                        $("#expressionStr").hide();
+                        alert("Некорректное выражение");
+                    } else {
+                        $("#expressionStr").show();
+                        $("#expression").val(result);
+                    }
+                }
+
+            });
+        }
+</script>
