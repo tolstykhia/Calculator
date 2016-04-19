@@ -26,12 +26,15 @@ namespace Calculator.BusinessLogic
 
         private Decimal? GetResult(ArithmeticExpression expression)
         {
+            if (expression == null) return null;
             var x = expression.x;
             var y = expression.y;
             if (x == null)
                 x = GetResult(expression.ExpressionX);
             if (y == null)
                 y = GetResult(expression.ExpressionY);
+
+            if (x == null || y == null) return null;
 
             switch (expression.Operator.Description)
             {

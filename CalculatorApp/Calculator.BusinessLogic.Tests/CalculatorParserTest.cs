@@ -25,7 +25,7 @@ namespace Calculator.BusinessLogic.Tests
             yield return new object[]
             {
                 "(24+3*2.5)/(-2)-3*(1-2)",
-                new List<String>() {"24","3","2.5","*","+","(-2)","/","3","1","2","-","*","-"} 
+                new List<String>() {"24","3","2.5","*","+","0","2","-","/","3","1","2","-","*","-"} 
             };
         }
 
@@ -53,7 +53,7 @@ namespace Calculator.BusinessLogic.Tests
                     ExpressionX = new ArithmeticExpression()
                     {
                         x = null,
-                        y = -2,
+                        y = null,
                         Operator = new Operation(){Description = "/", Priority = 1},
                         ExpressionX = new ArithmeticExpression()
                         {
@@ -70,7 +70,14 @@ namespace Calculator.BusinessLogic.Tests
                                 ExpressionY = null
                             }
                         },
-                        ExpressionY = null
+                        ExpressionY = new ArithmeticExpression()
+                        {
+                            x=0,
+                            y=2,
+                            Operator = new Operation(){ Description = "-", Priority = 2},
+                            ExpressionX = null,
+                            ExpressionY = null,
+                        }
                     },
                     ExpressionY = new ArithmeticExpression()
                     {
@@ -91,7 +98,7 @@ namespace Calculator.BusinessLogic.Tests
             };
             yield return new object[]
             {
-                "((-3.5)-3/2)*2.5+3/(1+2)",
+                "(-3.5-3/2)*2.5+3/(1+2)",
                 new ArithmeticExpression()
                 {
                     x = null,
@@ -104,10 +111,17 @@ namespace Calculator.BusinessLogic.Tests
                         Operator = new Operation(){Description = "*", Priority = 1},
                         ExpressionX = new ArithmeticExpression()
                         {
-                            x = -3.5m,
+                            x = null,
                             y = null,
                             Operator = new Operation(){Description = "-", Priority = 2},
-                            ExpressionX = null,
+                            ExpressionX = new ArithmeticExpression()
+                            {
+                                x=0,
+                                y=3.5m,
+                                Operator = new Operation(){Description = "-", Priority = 2},
+                                ExpressionX = null,
+                                ExpressionY = null
+                            },
                             ExpressionY = new ArithmeticExpression()
                             {
                                 x = 3,
@@ -164,6 +178,22 @@ namespace Calculator.BusinessLogic.Tests
 
             //assert
             Assert.Equal(expectedArithmeticExpression, expression, new ArithmeticExpressionComparer());
+        }
+
+        [Theory]
+        [InlineData("32.5^2+56%")]
+        [InlineData("2add2")]
+        [InlineData("((-62)/3+36")]
+        public void ReturnNullArithmeticExpression(String expressionStr)
+        {
+            //average
+            var parser = new CalculatorParser();
+
+            //act
+            var expression = parser.Parse(expressionStr);
+
+            //assert
+            Assert.Null(expression);
         }
     }
 }

@@ -26,9 +26,9 @@ namespace Calculator.BusinessLogic
 
         public CalculatorParser()
         {
-            this._standartNumberPattern = @"(?'Open'\(\-)?\d+(\.|\,)?\d*(?'Close-Open'\))?(?(Open)(?!))";
+            this._standartNumberPattern = @"\d+(\.|\,)?\d*";
             var tmpOperationStr = @"(";
-            _operations.ForEach(x => tmpOperationStr += @"\" + x.Description + (_operations.IndexOf(x) != _operations.Count - 1 ? @"|" : @")+"));
+            _operations.ForEach(x => tmpOperationStr += @"\" + x.Description + (_operations.IndexOf(x) != _operations.Count - 1 ? @"|" : @"){1}"));
             this._standartArithOperationPattern = tmpOperationStr;
             this._standartNumberRegex = new Regex(_standartNumberPattern);
             this._standartArithOperationRegex = new Regex(_standartArithOperationPattern);
@@ -42,22 +42,28 @@ namespace Calculator.BusinessLogic
             var matches = rgx.Matches(expression);
 
             var arithOpStack = new List<String>();
-
-            foreach (Match match in matches)
+            var startIdex = 0;
+            if (matches[startIdex].Value == "-")
             {
-                if (_standartNumberRegex.IsMatch(match.Value))
+                result.Add("0");
+                startIdex = 1;
+            }
+
+            for (int j = startIdex; j < matches.Count; j++)
+            {
+                if (_standartNumberRegex.IsMatch(matches[j].Value))
                 {
-                    result.Add(match.Value);
+                    result.Add(matches[j].Value);
                     continue;
                 }
 
-                if (match.Value == "(")
+                if (matches[j].Value == "(")
                 {
-                    arithOpStack.Add(match.Value);
+                    arithOpStack.Add(matches[j].Value);
                     continue;
                 }
 
-                if (match.Value == ")")
+                if (matches[j].Value == ")")
                 {
                     for (int i = arithOpStack.Count - 1; i >= 0; i--)
                     {
@@ -75,9 +81,16 @@ namespace Calculator.BusinessLogic
                     continue;
                 }
 
-                if (_standartArithOperationRegex.IsMatch(match.Value))
+                if (_standartArithOperationRegex.IsMatch(matches[j].Value))
                 {
-                    var operationPreority = GetPriority(match.Value);
+                    if (matches[j].Value == "-" && (_standartArithOperationRegex.IsMatch(matches[j-1].Value) || matches[j-1].Value=="("))  //arithOpStack[arithOpStack.Count-1] == "(" && (result.Count == 0 || result[result.Count-1] != "0" && result[result.Count-1] != matches[j-1].Value))
+                    {
+                            result.Add("0");
+                            arithOpStack.Add(matches[j].Value);
+                        continue;
+                    }
+
+                    var operationPreority = GetPriority(matches[j].Value);
 
                     for (int i = arithOpStack.Count - 1; i >= 0; i--)
                     {
@@ -92,10 +105,10 @@ namespace Calculator.BusinessLogic
                             break;
                         }
                     }
-                    arithOpStack.Add(match.Value);
+                    arithOpStack.Add(matches[j].Value);
                 }
             }
-
+            
             for (int i = arithOpStack.Count - 1; i >= 0; i--)
             {
                 result.Add(arithOpStack[i]);
@@ -107,12 +120,25 @@ namespace Calculator.BusinessLogic
 
         public ArithmeticExpression Parse(string expression)
         {
+            if (!IsValidExpression(expression)) return null;
+
             this._postfixExpression = ConvertToPostfixNotation(expression);
 
             Int32 outIndex;
             var result = GetArithmeticExpression(null, _postfixExpression.Count - 1, out outIndex);
 
             return result;
+        }
+
+        private Boolean IsValidExpression(String expression)
+        {
+            var rgx = new Regex(@"(" + _standartNumberPattern + @"|" + _standartArithOperationPattern + @"|\(|\))");
+            var matches = rgx.Matches(expression);
+
+
+            String tmpExpression = matches.Cast<Match>().Aggregate("", (current, match) => current + match.Value);
+
+            return tmpExpression == expression;
         }
 
         private ArithmeticExpression GetArithmeticExpression(ArithmeticExpression result, Int32 index, out Int32 outIndex)
