@@ -8,7 +8,7 @@ using Calculator.Domain;
 
 namespace Calculator.BusinessLogic
 {
-    public class CalculatorExecuter
+    public class CalculatorExecuter : ICalculatorExecuter
     {
         private readonly ICalculatorParser _calculatorParser;
 
