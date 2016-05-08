@@ -118,7 +118,7 @@ namespace Calculator.BusinessLogic.Tests
 
         [Theory]
         [MemberData("GetExpressions")]
-        public void ReturnDecisionOfArithmeticExpression(String expressionStr, Decimal expectedResult, ArithmeticExpression arithExpression)
+        public void ReturnDecisionOfArithmeticExpression(string expressionStr, decimal expectedResult, ArithmeticExpression arithExpression)
         {
             //averrage
             var calculatorParser = new Mock<ICalculatorParser>();

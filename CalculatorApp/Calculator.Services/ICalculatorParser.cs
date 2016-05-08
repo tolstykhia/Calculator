@@ -6,6 +6,6 @@ namespace Calculator.Services
 {
     public interface ICalculatorParser
     {
-        ArithmeticExpression Parse(String expression);
+        ArithmeticExpression Parse(string expression);
     }
 }

@@ -15,17 +15,17 @@ namespace Calculator.BusinessLogic.Tests
             yield return new object[]
             {
                 "2+2",
-                new List<String>(){"2", "2", "+"}
+                new List<string>(){"2", "2", "+"}
             };
             yield return new object[]
             {
                 "-3+4*2/(1-5)",
-                new List<String>() {"0","3","-","4","2","*","1","5","-","/","+"} 
+                new List<string>() {"0","3","-","4","2","*","1","5","-","/","+"} 
             };
             yield return new object[]
             {
                 "(24+3*2.5)/(-2)-3*(1-2)",
-                new List<String>() {"24","3","2.5","*","+","0","2","-","/","3","1","2","-","*","-"} 
+                new List<string>() {"24","3","2.5","*","+","0","2","-","/","3","1","2","-","*","-"} 
             };
         }
 
@@ -154,7 +154,7 @@ namespace Calculator.BusinessLogic.Tests
 
         [Theory]
         [MemberData("GetExpressionInfixNotations")]
-        public void ReturnPostfixNotationOfExpression(String expressionStr, List<String> expectedStock)
+        public void ReturnPostfixNotationOfExpression(string expressionStr, List<string> expectedStock)
         {
             //average
             var parser = new CalculatorParser();
@@ -168,7 +168,7 @@ namespace Calculator.BusinessLogic.Tests
 
         [Theory]
         [MemberData("GetExpressions")]
-        public void ReturnArithmeticExpression(String expressionStr, ArithmeticExpression expectedArithmeticExpression)
+        public void ReturnArithmeticExpression(string expressionStr, ArithmeticExpression expectedArithmeticExpression)
         {
             //average
             var parser = new CalculatorParser();
@@ -184,7 +184,7 @@ namespace Calculator.BusinessLogic.Tests
         [InlineData("32.5^2+56%")]
         [InlineData("2add2")]
         [InlineData("((-62)/3+36")]
-        public void ReturnNullArithmeticExpression(String expressionStr)
+        public void ReturnNullArithmeticExpression(string expressionStr)
         {
             //average
             var parser = new CalculatorParser();

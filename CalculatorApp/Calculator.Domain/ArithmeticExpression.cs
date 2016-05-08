@@ -9,8 +9,8 @@ namespace Calculator.Domain
 {
     public class ArithmeticExpression
     {
-        public Decimal? x { get; set; }
-        public Decimal? y { get; set; }
+        public decimal? x { get; set; }
+        public decimal? y { get; set; }
 
         public Operation Operator { get; set; }
 

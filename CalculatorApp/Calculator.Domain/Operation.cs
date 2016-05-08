@@ -8,8 +8,8 @@ namespace Calculator.Domain
 {
     public class Operation
     {
-        public String Description { get; set; }
+        public string Description { get; set; }
 
-        public Int32 Priority { get; set; }
+        public int Priority { get; set; }
     }
 }

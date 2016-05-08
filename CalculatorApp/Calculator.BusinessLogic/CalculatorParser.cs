@@ -11,11 +11,11 @@ namespace Calculator.BusinessLogic
 {
     public class CalculatorParser : ICalculatorParser
     {
-        private readonly String _standartNumberPattern;
-        private readonly String _standartArithOperationPattern;
+        private readonly string _standartNumberPattern;
+        private readonly string _standartArithOperationPattern;
         private readonly Regex _standartArithOperationRegex;
         private readonly Regex _standartNumberRegex;
-        private List<String> _postfixExpression;
+        private List<string> _postfixExpression;
         private readonly  List<Operation> _operations = new List<Operation>()
         {
             new Operation(){Description = "+", Priority = 2},
@@ -33,16 +33,16 @@ namespace Calculator.BusinessLogic
             this._standartArithOperationPattern = tmpOperationStr;
             this._standartNumberRegex = new Regex(_standartNumberPattern);
             this._standartArithOperationRegex = new Regex(_standartArithOperationPattern);
-            this._postfixExpression = new List<String>();
+            this._postfixExpression = new List<string>();
         }
 
-        public List<String> ConvertToPostfixNotation(String expression)
+        public List<string> ConvertToPostfixNotation(string expression)
         {
-            var result = new List<String>();
+            var result = new List<string>();
             var rgx = new Regex(@"(" + _standartNumberPattern + @"|" + _standartArithOperationPattern + @"|\(|\))");
             var matches = rgx.Matches(expression);
 
-            var arithOpStack = new List<String>();
+            var arithOpStack = new List<string>();
             var startIdex = 0;
             if (matches[startIdex].Value == "-")
             {
@@ -90,7 +90,7 @@ namespace Calculator.BusinessLogic
                         (_standartArithOperationRegex.IsMatch(matches[j - 1].Value) || matches[j - 1].Value == "("))
                     {
                         result.Add("0");
-                        Int32 countUnMinus = 1;
+                        int countUnMinus = 1;
                         while (!_standartNumberRegex.IsMatch(matches[j + 1].Value))
                         {
                             if (matches[j + 1].Value == "-")
@@ -107,12 +107,12 @@ namespace Calculator.BusinessLogic
                         }
                     }
 
-                    var operationPreority = GetPriority(matches[j].Value);
+                    var operationPriority = GetPriority(matches[j].Value);
 
                     for (int i = arithOpStack.Count - 1; i >= 0; i--)
                     {
                         if (arithOpStack[i] == "(") break;
-                        if (GetPriority(arithOpStack[i]) <= operationPreority)
+                        if (GetPriority(arithOpStack[i]) <= operationPriority)
                         {
                             result.Add(arithOpStack[i]);
                             arithOpStack.RemoveAt(i);
@@ -142,24 +142,24 @@ namespace Calculator.BusinessLogic
 
             this._postfixExpression = ConvertToPostfixNotation(expression);
 
-            Int32 outIndex;
+            int outIndex;
             var result = GetArithmeticExpression(null, _postfixExpression.Count - 1, out outIndex);
 
             return result;
         }
 
-        private Boolean IsValidExpression(String expression)
+        private bool IsValidExpression(string expression)
         {
             var rgx = new Regex(@"(" + _standartNumberPattern + @"|" + _standartArithOperationPattern + @"|\(|\))");
             var matches = rgx.Matches(expression);
 
 
-            String tmpExpression = matches.Cast<Match>().Aggregate("", (current, match) => current + match.Value);
+            string tmpExpression = matches.Cast<Match>().Aggregate("", (current, match) => current + match.Value);
 
             return tmpExpression == expression;
         }
 
-        private ArithmeticExpression GetArithmeticExpression(ArithmeticExpression result, Int32 index, out Int32 outIndex)
+        private ArithmeticExpression GetArithmeticExpression(ArithmeticExpression result, int index, out int outIndex)
         {
             outIndex = index;
             if (index < 0) return result;
@@ -198,9 +198,9 @@ namespace Calculator.BusinessLogic
 
             if (_standartNumberRegex.IsMatch(_postfixExpression[index]))
             {
-                Decimal decimalValue;
+                decimal decimalValue;
 
-                Decimal.TryParse(_postfixExpression[index].Replace("(", "").Replace(")", "").Replace(".", ","), out decimalValue);
+                decimal.TryParse(_postfixExpression[index].Replace("(", "").Replace(")", "").Replace(".", ","), out decimalValue);
 
                 if (result.y == null && result.ExpressionY == null)
                 {
@@ -218,18 +218,18 @@ namespace Calculator.BusinessLogic
             return result;
         }
 
-        private ArithmeticExpression GetSubArithmeticExpression(Int32 index, out Int32 outIndex)
+        private ArithmeticExpression GetSubArithmeticExpression(int index, out int outIndex)
         {
             var result = new ArithmeticExpression() { Operator = GetOperation(_postfixExpression[index]) };
             return GetArithmeticExpression(result, index - 1, out outIndex);
         }
 
-        private Operation GetOperation(String operationStr)
+        private Operation GetOperation(string operationStr)
         {
             return _operations.FirstOrDefault(x => x.Description == operationStr);
         }
 
-        private Int32 GetPriority(String operationStr)
+        private int GetPriority(string operationStr)
         {
             return _operations.Where(x => x.Description == operationStr).Select(x => x.Priority).FirstOrDefault();
         }

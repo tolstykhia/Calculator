@@ -4,6 +4,6 @@ namespace Calculator.Services
 {
     public interface ICalculatorExecuter
     {
-        Decimal? GetDecision(String expressionStr);
+        decimal? GetDecision(string expressionStr);
     }
 }

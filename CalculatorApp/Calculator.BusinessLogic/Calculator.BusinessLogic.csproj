@@ -35,7 +35,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Calculator.cs" />
+    <Compile Include="CalculatorExecuter.cs" />
     <Compile Include="CalculatorParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

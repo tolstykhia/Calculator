@@ -17,14 +17,14 @@ namespace Calculator.BusinessLogic
             _calculatorParser = calculatorParser;
         }
 
-        public Decimal? GetDecision(String expressionStr)
+        public decimal? GetDecision(string expressionStr)
         {
             var expression = _calculatorParser.Parse(expressionStr);
 
             return GetResult(expression);
         }
 
-        private Decimal? GetResult(ArithmeticExpression expression)
+        private decimal? GetResult(ArithmeticExpression expression)
         {
             if (expression == null) return null;
             var x = expression.x;
@@ -47,7 +47,7 @@ namespace Calculator.BusinessLogic
                 case "/":
                     return y != 0 ? x / y : null;
                 case "^":
-                    return (Decimal?) Math.Pow((double)x, (double)y);
+                    return (decimal?) Math.Pow((double)x, (double)y);
                 default:
                     return null;
             }

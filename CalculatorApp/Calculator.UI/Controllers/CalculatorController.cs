@@ -22,7 +22,7 @@ namespace Calculator.UI.Controllers
             return PartialView("_CalculatorView");
         }
 
-        public ActionResult GetDecision(String expression)
+        public ActionResult GetDecision(string expression)
         {
             var result = _calculator.GetDecision(expression);
 
