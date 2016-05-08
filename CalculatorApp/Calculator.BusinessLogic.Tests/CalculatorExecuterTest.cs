@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 using Calculator.BusinessLogic;
-using Calculator.Domain;
+using Calculator.BusinessLogic.Operations;
 using Calculator.Services;
 using Moq;
 using Xunit.Extensions;
@@ -14,7 +14,7 @@ using Xunit.Extensions;
 namespace Calculator.BusinessLogic.Tests
 {
 
-    public class CalculatorTest
+    public class CalculatorExecuterTest
     {
         public static IEnumerable<object[]> GetExpressions()
         {
@@ -26,23 +26,23 @@ namespace Calculator.BusinessLogic.Tests
                 {
                     x = null,
                     y = null,
-                    Operator = new Operation(){Description = "-", Priority = 2},
+                    Operator = new Substraction(),
                     ExpressionX = new ArithmeticExpression()
                     {
                         x = null,
                         y = -2,
-                        Operator = new Operation(){Description = "/", Priority = 1},
+                        Operator = new Division(),
                         ExpressionX = new ArithmeticExpression()
                         {
                             x = 24,
                             y = null,
-                            Operator = new Operation(){Description = "+", Priority = 2},
+                            Operator = new Addition(),
                             ExpressionX = null,
                             ExpressionY = new ArithmeticExpression()
                             {
                                 x = 3,
                                 y = 2,
-                                Operator = new Operation(){Description = "*", Priority = 1},
+                                Operator = new Multiplication(),
                                 ExpressionX = null,
                                 ExpressionY = null
                             }
@@ -53,13 +53,13 @@ namespace Calculator.BusinessLogic.Tests
                     {
                         x = 3,
                         y = null,
-                        Operator = new Operation(){Description = "*", Priority = 1},
+                        Operator = new Multiplication(),
                         ExpressionX = null,
                         ExpressionY = new ArithmeticExpression()
                         {
                             x = 1,
                             y = 2,
-                            Operator = new Operation(){Description = "-", Priority = 2},
+                            Operator = new Substraction(),
                             ExpressionX = null,
                             ExpressionY = null
                         }
@@ -74,23 +74,23 @@ namespace Calculator.BusinessLogic.Tests
                 {
                     x = null,
                     y = null,
-                    Operator = new Operation(){Description = "+", Priority = 2},
+                    Operator = new Addition(),
                     ExpressionX = new ArithmeticExpression()
                     {
                         x = null,
                         y = 2.5m,
-                        Operator = new Operation(){Description = "*", Priority = 1},
+                        Operator = new Multiplication(),
                         ExpressionX = new ArithmeticExpression()
                         {
                             x = -3.5m,
                             y = null,
-                            Operator = new Operation(){Description = "-", Priority = 2},
+                            Operator = new Substraction(),
                             ExpressionX = null,
                             ExpressionY = new ArithmeticExpression()
                             {
                                 x = 3,
                                 y = 2,
-                                Operator = new Operation(){Description = "/", Priority = 1},
+                                Operator = new Division(),
                                 ExpressionX = null,
                                 ExpressionY = null
                             }
@@ -101,13 +101,13 @@ namespace Calculator.BusinessLogic.Tests
                     {
                         x = 3,
                         y = null,
-                        Operator = new Operation(){Description = "/", Priority = 1},
+                        Operator = new Division(),
                         ExpressionX = null,
                         ExpressionY = new ArithmeticExpression()
                         {
                             x = 1,
                             y = 2,
-                            Operator = new Operation(){Description = "+", Priority = 2},
+                            Operator = new Addition(),
                             ExpressionX = null,
                             ExpressionY = null
                         }

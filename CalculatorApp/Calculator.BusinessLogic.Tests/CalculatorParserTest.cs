@@ -3,13 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Calculator.Domain;
+using Calculator.BusinessLogic.Operations;
+using Calculator.Services;
+using Moq;
 using Xunit;
 
 namespace Calculator.BusinessLogic.Tests
 {
     public class CalculatorParserTest
     {
+        private Mock<IOperationCollection> _operations;
+        private CalculatorParser _parser;
+        public CalculatorParserTest()
+        {
+            this._operations = new Mock<IOperationCollection>();
+            _operations.Setup(x => x.OperationList)
+                .Returns(new List<IOperation>()
+                {
+                    new Addition(),
+                    new Substraction(),
+                    new Multiplication(),
+                    new Division()
+                });
+
+            this._parser = new CalculatorParser(_operations.Object);
+        }
+
         public static IEnumerable<object[]> GetExpressionInfixNotations()
         {
             yield return new object[]
@@ -39,7 +58,7 @@ namespace Calculator.BusinessLogic.Tests
                 {
                     x = 2,
                     y = 2,
-                    Operator = new Operation(){Description = "+", Priority = 2},
+                    Operator = new Addition(),
                 }
             };
             yield return new object[]
@@ -49,23 +68,23 @@ namespace Calculator.BusinessLogic.Tests
                 {
                     x = null,
                     y = null,
-                    Operator = new Operation(){Description = "-", Priority = 2},
+                    Operator = new Substraction(),
                     ExpressionX = new ArithmeticExpression()
                     {
                         x = null,
                         y = null,
-                        Operator = new Operation(){Description = "/", Priority = 1},
+                        Operator = new Division(),
                         ExpressionX = new ArithmeticExpression()
                         {
                             x = 24,
                             y = null,
-                            Operator = new Operation(){Description = "+", Priority = 2},
+                            Operator = new Addition(),
                             ExpressionX = null,
                             ExpressionY = new ArithmeticExpression()
                             {
                                 x = 3,
                                 y = 2.5m,
-                                Operator = new Operation(){Description = "*", Priority = 1},
+                                Operator = new Multiplication(),
                                 ExpressionX = null,
                                 ExpressionY = null
                             }
@@ -74,7 +93,7 @@ namespace Calculator.BusinessLogic.Tests
                         {
                             x=0,
                             y=2,
-                            Operator = new Operation(){ Description = "-", Priority = 2},
+                            Operator = new Substraction(),
                             ExpressionX = null,
                             ExpressionY = null,
                         }
@@ -83,13 +102,13 @@ namespace Calculator.BusinessLogic.Tests
                     {
                         x = 3,
                         y = null,
-                        Operator = new Operation(){Description = "*", Priority = 1},
+                        Operator = new Multiplication(),
                         ExpressionX = null,
                         ExpressionY = new ArithmeticExpression()
                         {
                             x = 1,
                             y = 2,
-                            Operator = new Operation(){Description = "-", Priority = 2},
+                            Operator = new Substraction(),
                             ExpressionX = null,
                             ExpressionY = null
                         }
@@ -103,22 +122,22 @@ namespace Calculator.BusinessLogic.Tests
                 {
                     x = null,
                     y = null,
-                    Operator = new Operation(){Description = "+", Priority = 2},
+                    Operator = new Addition(),
                     ExpressionX = new ArithmeticExpression()
                     {
                         x = null,
                         y = 2.5m,
-                        Operator = new Operation(){Description = "*", Priority = 1},
+                        Operator = new Multiplication(),
                         ExpressionX = new ArithmeticExpression()
                         {
                             x = null,
                             y = null,
-                            Operator = new Operation(){Description = "-", Priority = 2},
+                            Operator = new Substraction(),
                             ExpressionX = new ArithmeticExpression()
                             {
                                 x=0,
                                 y=3.5m,
-                                Operator = new Operation(){Description = "-", Priority = 2},
+                                Operator = new Substraction(),
                                 ExpressionX = null,
                                 ExpressionY = null
                             },
@@ -126,7 +145,7 @@ namespace Calculator.BusinessLogic.Tests
                             {
                                 x = 3,
                                 y = 2,
-                                Operator = new Operation(){Description = "/", Priority = 1},
+                                Operator = new Division(),
                                 ExpressionX = null,
                                 ExpressionY = null
                             }
@@ -137,13 +156,13 @@ namespace Calculator.BusinessLogic.Tests
                     {
                         x = 3,
                         y = null,
-                        Operator = new Operation(){Description = "/", Priority = 1},
+                        Operator = new Division(),
                         ExpressionX = null,
                         ExpressionY = new ArithmeticExpression()
                         {
                             x = 1,
                             y = 2,
-                            Operator = new Operation(){Description = "+", Priority = 2},
+                            Operator = new Addition(),
                             ExpressionX = null,
                             ExpressionY = null
                         }
@@ -157,10 +176,9 @@ namespace Calculator.BusinessLogic.Tests
         public void ReturnPostfixNotationOfExpression(string expressionStr, List<string> expectedStock)
         {
             //average
-            var parser = new CalculatorParser();
 
             //act
-            var expressionStock = parser.ConvertToPostfixNotation(expressionStr);
+            var expressionStock = _parser.ConvertToPostfixNotation(expressionStr);
 
             //assert
             Assert.Equal(expectedStock, expressionStock);
@@ -171,10 +189,9 @@ namespace Calculator.BusinessLogic.Tests
         public void ReturnArithmeticExpression(string expressionStr, ArithmeticExpression expectedArithmeticExpression)
         {
             //average
-            var parser = new CalculatorParser();
 
             //act
-            var expression = parser.Parse(expressionStr);
+            var expression = _parser.Parse(expressionStr);
 
             //assert
             Assert.Equal(expectedArithmeticExpression, expression, new ArithmeticExpressionComparer());
@@ -187,10 +204,9 @@ namespace Calculator.BusinessLogic.Tests
         public void ReturnNullArithmeticExpression(string expressionStr)
         {
             //average
-            var parser = new CalculatorParser();
 
             //act
-            var expression = parser.Parse(expressionStr);
+            var expression = _parser.Parse(expressionStr);
 
             //assert
             Assert.Null(expression);

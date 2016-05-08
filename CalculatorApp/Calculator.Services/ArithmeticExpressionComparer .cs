@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Calculator.Domain
+namespace Calculator.Services
 {
     public class ArithmeticExpressionComparer : IEqualityComparer<ArithmeticExpression>
     {

@@ -1,6 +1,7 @@
 using System;
 using System.Web;
 using Calculator.BusinessLogic;
+using Calculator.BusinessLogic.Operations;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
 using Ninject.Web.Common;
@@ -64,6 +65,7 @@ namespace Calculator.UI
         {
             kernel.Bind<ICalculatorExecuter>().To<CalculatorExecuter>().InRequestScope();
             kernel.Bind<ICalculatorParser>().To<CalculatorParser>().InRequestScope();
+            kernel.Bind<IOperationCollection>().To<OperationCollection>().InRequestScope();
         }        
     }
 }

@@ -39,8 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArithmeticExpression.cs" />
+    <Compile Include="ArithmeticExpressionComparer .cs" />
     <Compile Include="ICalculatorExecuter.cs" />
     <Compile Include="ICalculatorParser.cs" />
+    <Compile Include="IOperation.cs" />
+    <Compile Include="IOperationCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

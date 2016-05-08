@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Calculator.Domain;
+using Calculator.BusinessLogic.Operations;
 using Calculator.Services;
 
 namespace Calculator.BusinessLogic
@@ -16,20 +16,14 @@ namespace Calculator.BusinessLogic
         private readonly Regex _standartArithOperationRegex;
         private readonly Regex _standartNumberRegex;
         private List<string> _postfixExpression;
-        private readonly  List<Operation> _operations = new List<Operation>()
-        {
-            new Operation(){Description = "+", Priority = 2},
-            new Operation(){Description = "-", Priority = 2},
-            new Operation(){Description = "*", Priority = 1},
-            new Operation(){Description = "/", Priority = 1},
-            new Operation(){Description = "^", Priority = 0},
-        }; 
+        private readonly  IOperationCollection _operations;
 
-        public CalculatorParser()
+        public CalculatorParser(IOperationCollection operations)
         {
+            this._operations = operations;
             this._standartNumberPattern = @"\d+(\.|\,)?\d*";
             var tmpOperationStr = @"(";
-            _operations.ForEach(x => tmpOperationStr += @"\" + x.Description + (_operations.IndexOf(x) != _operations.Count - 1 ? @"|" : @"){1}"));
+            _operations.OperationList.ForEach(x => tmpOperationStr += @"\" + x.Description + (_operations.OperationList.IndexOf(x) != _operations.OperationList.Count - 1 ? @"|" : @"){1}"));
             this._standartArithOperationPattern = tmpOperationStr;
             this._standartNumberRegex = new Regex(_standartNumberPattern);
             this._standartArithOperationRegex = new Regex(_standartArithOperationPattern);
@@ -224,14 +218,14 @@ namespace Calculator.BusinessLogic
             return GetArithmeticExpression(result, index - 1, out outIndex);
         }
 
-        private Operation GetOperation(string operationStr)
+        private IOperation GetOperation(string operationStr)
         {
-            return _operations.FirstOrDefault(x => x.Description == operationStr);
+            return _operations.OperationList.FirstOrDefault(x => x.Description == operationStr);
         }
 
         private int GetPriority(string operationStr)
         {
-            return _operations.Where(x => x.Description == operationStr).Select(x => x.Priority).FirstOrDefault();
+            return _operations.OperationList.Where(x => x.Description == operationStr).Select(x => x.Priority).FirstOrDefault();
         }
     }
 }

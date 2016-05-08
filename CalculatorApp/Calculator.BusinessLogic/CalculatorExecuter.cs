@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Calculator.Services;
-using Calculator.Domain;
 
 namespace Calculator.BusinessLogic
 {
@@ -36,21 +35,7 @@ namespace Calculator.BusinessLogic
 
             if (x == null || y == null) return null;
 
-            switch (expression.Operator.Description)
-            {
-                case "+":
-                    return x + y;
-                case "-":
-                    return x - y;
-                case "*":
-                    return x * y;
-                case "/":
-                    return y != 0 ? x / y : null;
-                case "^":
-                    return (decimal?) Math.Pow((double)x, (double)y);
-                default:
-                    return null;
-            }
+            return expression.Operator.Execute(x,y);
         }
     }
 }
