@@ -34,167 +34,31 @@ namespace Calculator.BusinessLogic.Tests
             yield return new object[]
             {
                 "2+2",
-                new List<string>(){"2", "2", "+"}
+                new Stack<object>(new List<object>(){2m, 2m, new Addition()}), 
             };
             yield return new object[]
             {
                 "-3+4*2/(1-5)",
-                new List<string>() {"0","3","-","4","2","*","1","5","-","/","+"} 
+                new Stack<object>(new List<object>() {0m, 3m, new Substraction(), 4m, 2m, new Multiplication(),1m,5m,new Substraction(),new Division(), new Addition()}),  
             };
             yield return new object[]
             {
                 "(24+3*2.5)/(-2)-3*(1-2)",
-                new List<string>() {"24","3","2.5","*","+","0","2","-","/","3","1","2","-","*","-"} 
-            };
-        }
-
-
-        public static IEnumerable<object[]> GetExpressions()
-        {
-            yield return new object[]
-            {
-                "2+2",
-                new ArithmeticExpression()
-                {
-                    x = 2,
-                    y = 2,
-                    Operator = new Addition(),
-                }
-            };
-            yield return new object[]
-            {
-                "(24+3*2.5)/(-2)-3*(1-2)",
-                new ArithmeticExpression()
-                {
-                    x = null,
-                    y = null,
-                    Operator = new Substraction(),
-                    ExpressionX = new ArithmeticExpression()
-                    {
-                        x = null,
-                        y = null,
-                        Operator = new Division(),
-                        ExpressionX = new ArithmeticExpression()
-                        {
-                            x = 24,
-                            y = null,
-                            Operator = new Addition(),
-                            ExpressionX = null,
-                            ExpressionY = new ArithmeticExpression()
-                            {
-                                x = 3,
-                                y = 2.5m,
-                                Operator = new Multiplication(),
-                                ExpressionX = null,
-                                ExpressionY = null
-                            }
-                        },
-                        ExpressionY = new ArithmeticExpression()
-                        {
-                            x=0,
-                            y=2,
-                            Operator = new Substraction(),
-                            ExpressionX = null,
-                            ExpressionY = null,
-                        }
-                    },
-                    ExpressionY = new ArithmeticExpression()
-                    {
-                        x = 3,
-                        y = null,
-                        Operator = new Multiplication(),
-                        ExpressionX = null,
-                        ExpressionY = new ArithmeticExpression()
-                        {
-                            x = 1,
-                            y = 2,
-                            Operator = new Substraction(),
-                            ExpressionX = null,
-                            ExpressionY = null
-                        }
-                    }
-                }
-            };
-            yield return new object[]
-            {
-                "(-3.5-3/2)*2.5+3/(1+2)",
-                new ArithmeticExpression()
-                {
-                    x = null,
-                    y = null,
-                    Operator = new Addition(),
-                    ExpressionX = new ArithmeticExpression()
-                    {
-                        x = null,
-                        y = 2.5m,
-                        Operator = new Multiplication(),
-                        ExpressionX = new ArithmeticExpression()
-                        {
-                            x = null,
-                            y = null,
-                            Operator = new Substraction(),
-                            ExpressionX = new ArithmeticExpression()
-                            {
-                                x=0,
-                                y=3.5m,
-                                Operator = new Substraction(),
-                                ExpressionX = null,
-                                ExpressionY = null
-                            },
-                            ExpressionY = new ArithmeticExpression()
-                            {
-                                x = 3,
-                                y = 2,
-                                Operator = new Division(),
-                                ExpressionX = null,
-                                ExpressionY = null
-                            }
-                        },
-                        ExpressionY = null
-                    },
-                    ExpressionY = new ArithmeticExpression()
-                    {
-                        x = 3,
-                        y = null,
-                        Operator = new Division(),
-                        ExpressionX = null,
-                        ExpressionY = new ArithmeticExpression()
-                        {
-                            x = 1,
-                            y = 2,
-                            Operator = new Addition(),
-                            ExpressionX = null,
-                            ExpressionY = null
-                        }
-                    }
-                }
+                new Stack<object>(new List<object>() {24m,3m,2.5m,new Multiplication(),new Addition(),0m,2m,new Substraction(),new Division(),3m,1m,2m,new Substraction(), new Multiplication(),new Substraction()}),  
             };
         }
 
         [Theory]
         [MemberData("GetExpressionInfixNotations")]
-        public void ReturnPostfixNotationOfExpression(string expressionStr, List<string> expectedStock)
+        public void ReturnPostfixNotationOfExpression(string expressionStr, Stack<object> expectedStack)
         {
             //average
 
             //act
-            var expressionStock = _parser.ConvertToPostfixNotation(expressionStr);
+            var expressionStack = _parser.ConvertToPostfixNotation(expressionStr);
 
             //assert
-            Assert.Equal(expectedStock, expressionStock);
-        }
-
-        [Theory]
-        [MemberData("GetExpressions")]
-        public void ReturnArithmeticExpression(string expressionStr, ArithmeticExpression expectedArithmeticExpression)
-        {
-            //average
-
-            //act
-            var expression = _parser.Parse(expressionStr);
-
-            //assert
-            Assert.Equal(expectedArithmeticExpression, expression, new ArithmeticExpressionComparer());
+            Assert.Equal(expectedStack, expressionStack);
         }
 
         [Theory]

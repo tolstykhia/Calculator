@@ -27,5 +27,16 @@ namespace Calculator.BusinessLogic.Operations
         }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Division)) return false;
+            return Description == (obj as Division).Description;
+        }
+
+        public override int GetHashCode()
+        {
+            return Description.GetHashCode();
+        }
     }
 }

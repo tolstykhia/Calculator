@@ -27,5 +27,16 @@ namespace Calculator.BusinessLogic.Operations
         }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Substraction)) return false;
+            return Description == (obj as Substraction).Description;
+        }
+
+        public override int GetHashCode()
+        {
+            return Description.GetHashCode();
+        }
     }
 }

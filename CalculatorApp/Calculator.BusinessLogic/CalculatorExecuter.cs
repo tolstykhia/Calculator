@@ -18,24 +18,23 @@ namespace Calculator.BusinessLogic
 
         public decimal? GetDecision(string expressionStr)
         {
-            var expression = _calculatorParser.Parse(expressionStr);
-
-            return GetResult(expression);
+            var expressionStack = _calculatorParser.Parse(expressionStr);
+            
+            return GetResult(expressionStack, expressionStack.Pop());
         }
 
-        private decimal? GetResult(ArithmeticExpression expression)
+        private decimal? GetResult(Stack<object> expression, object elem)
         {
-            if (expression == null) return null;
-            var x = expression.x;
-            var y = expression.y;
-            if (x == null)
-                x = GetResult(expression.ExpressionX);
-            if (y == null)
-                y = GetResult(expression.ExpressionY);
-
-            if (x == null || y == null) return null;
-
-            return expression.Operator.Execute(x,y);
+            IOperation operation;
+            if (elem is IOperation)
+            {
+                operation = elem as IOperation;
+                var y = GetResult(expression, expression.Pop());
+                var x = GetResult(expression, expression.Pop());
+                return operation.Execute(x, y);
+            }
+            
+            return (decimal) elem;
         }
     }
 }

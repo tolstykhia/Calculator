@@ -20,105 +20,27 @@ namespace Calculator.BusinessLogic.Tests
         {
             yield return new object[]
             {
-                "(24+3*2)/(-2)-3*(1-2)",
-                -12,
-                new ArithmeticExpression()
-                {
-                    x = null,
-                    y = null,
-                    Operator = new Substraction(),
-                    ExpressionX = new ArithmeticExpression()
-                    {
-                        x = null,
-                        y = -2,
-                        Operator = new Division(),
-                        ExpressionX = new ArithmeticExpression()
-                        {
-                            x = 24,
-                            y = null,
-                            Operator = new Addition(),
-                            ExpressionX = null,
-                            ExpressionY = new ArithmeticExpression()
-                            {
-                                x = 3,
-                                y = 2,
-                                Operator = new Multiplication(),
-                                ExpressionX = null,
-                                ExpressionY = null
-                            }
-                        },
-                        ExpressionY = null
-                    },
-                    ExpressionY = new ArithmeticExpression()
-                    {
-                        x = 3,
-                        y = null,
-                        Operator = new Multiplication(),
-                        ExpressionX = null,
-                        ExpressionY = new ArithmeticExpression()
-                        {
-                            x = 1,
-                            y = 2,
-                            Operator = new Substraction(),
-                            ExpressionX = null,
-                            ExpressionY = null
-                        }
-                    }
-                }
+                "2+2",
+                4,
+                new Stack<object>(new List<object>(){2m, 2m, new Addition()})
             };
             yield return new object[]
             {
-                "((-3.5)-3/2)*2.5+3/(1+2)",
-                -11.5,
-                new ArithmeticExpression()
-                {
-                    x = null,
-                    y = null,
-                    Operator = new Addition(),
-                    ExpressionX = new ArithmeticExpression()
-                    {
-                        x = null,
-                        y = 2.5m,
-                        Operator = new Multiplication(),
-                        ExpressionX = new ArithmeticExpression()
-                        {
-                            x = -3.5m,
-                            y = null,
-                            Operator = new Substraction(),
-                            ExpressionX = null,
-                            ExpressionY = new ArithmeticExpression()
-                            {
-                                x = 3,
-                                y = 2,
-                                Operator = new Division(),
-                                ExpressionX = null,
-                                ExpressionY = null
-                            }
-                        },
-                        ExpressionY = null
-                    },
-                    ExpressionY = new ArithmeticExpression()
-                    {
-                        x = 3,
-                        y = null,
-                        Operator = new Division(),
-                        ExpressionX = null,
-                        ExpressionY = new ArithmeticExpression()
-                        {
-                            x = 1,
-                            y = 2,
-                            Operator = new Addition(),
-                            ExpressionX = null,
-                            ExpressionY = null
-                        }
-                    }
-                }
+                "-3+4*2/(1-5)",
+                -5,
+                new Stack<object>(new List<object>() {0m, 3m, new Substraction(), 4m, 2m, new Multiplication(),1m,5m,new Substraction(),new Division(), new Addition()}) 
+            };
+            yield return new object[]
+            {
+                "(24+3*2.5)/(-2)-3*(1-2)",
+                -12.75,
+                new Stack<object>(new List<object>() {24m,3m,2.5m,new Multiplication(),new Addition(),0m,2m,new Substraction(),new Division(),3m,1m,2m,new Substraction(), new Multiplication(),new Substraction()}) 
             };
         }
 
         [Theory]
         [MemberData("GetExpressions")]
-        public void ReturnDecisionOfArithmeticExpression(string expressionStr, decimal expectedResult, ArithmeticExpression arithExpression)
+        public void ReturnDecisionOfArithmeticExpression(string expressionStr, decimal expectedResult, Stack<object> arithExpression)
         {
             //averrage
             var calculatorParser = new Mock<ICalculatorParser>();
