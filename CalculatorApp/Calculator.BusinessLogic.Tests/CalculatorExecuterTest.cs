@@ -36,6 +36,18 @@ namespace Calculator.BusinessLogic.Tests
                 -12.75,
                 new Stack<object>(new List<object>() {24m,3m,2.5m,new Multiplication(),new Addition(),0m,2m,new Substraction(),new Division(),3m,1m,2m,new Substraction(), new Multiplication(),new Substraction()}) 
             };
+            yield return new object[]
+            {
+                "2^2+2^3",
+                12,
+                new Stack<object>(new List<object>(){2m, 2m, new Pow(), 2m, 3m, new Pow(), new Addition()}), 
+            };
+            yield return new object[]
+            {
+                "sin(-cos(90+90)+89)",
+                1,
+                new Stack<object>(new List<object>(){0m,90m, 90m, new Addition(), new Cos(), new Substraction(), 89m, new Addition(), new Sin()}), 
+            };
         }
 
         [Theory]

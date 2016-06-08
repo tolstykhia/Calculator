@@ -14,10 +14,13 @@ namespace Calculator.BusinessLogic.Operations
         {
             OperationList = new List<IOperation>
             {
-                new Addition() {},
-                new Substraction() {},
-                new Multiplication() {},
-                new Division() {}
+                    new Addition(),
+                    new Substraction(),
+                    new Multiplication(),
+                    new Division(),
+                    new Pow(),
+                    new Cos(),
+                    new Sin()
             };
         }
 

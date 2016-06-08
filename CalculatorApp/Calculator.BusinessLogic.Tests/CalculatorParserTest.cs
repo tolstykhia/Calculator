@@ -23,7 +23,10 @@ namespace Calculator.BusinessLogic.Tests
                     new Addition(),
                     new Substraction(),
                     new Multiplication(),
-                    new Division()
+                    new Division(),
+                    new Pow(),
+                    new Cos(),
+                    new Sin()
                 });
 
             this._parser = new CalculatorParser(_operations.Object);
@@ -45,6 +48,21 @@ namespace Calculator.BusinessLogic.Tests
             {
                 "(24+3*2.5)/(-2)-3*(1-2)",
                 new Stack<object>(new List<object>() {24m,3m,2.5m,new Multiplication(),new Addition(),0m,2m,new Substraction(),new Division(),3m,1m,2m,new Substraction(), new Multiplication(),new Substraction()}),  
+            };
+            yield return new object[]
+            {
+                "2^2+2^3",
+                new Stack<object>(new List<object>(){2m, 2m, new Pow(), 2m, 3m, new Pow(), new Addition()}), 
+            };
+            yield return new object[]
+            {
+                "-sin(cos(90+90)+91)",
+                new Stack<object>(new List<object>(){0m,90m, 90m, new Addition(), new Cos(), 91m, new Addition(), new Sin(), new Substraction()}), 
+            };
+            yield return new object[]
+            {
+                "sin(-cos(90+90)+91)",
+                new Stack<object>(new List<object>(){0m,90m, 90m, new Addition(), new Cos(), new Substraction(), 91m, new Addition(), new Sin()}), 
             };
         }
 

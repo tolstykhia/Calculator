@@ -38,9 +38,12 @@
     <Compile Include="CalculatorExecuter.cs" />
     <Compile Include="CalculatorParser.cs" />
     <Compile Include="Operations\Addition.cs" />
+    <Compile Include="Operations\Cos.cs" />
     <Compile Include="Operations\Division.cs" />
     <Compile Include="Operations\Multiplication.cs" />
     <Compile Include="Operations\OperationCollection.cs" />
+    <Compile Include="Operations\Pow.cs" />
+    <Compile Include="Operations\Sin.cs" />
     <Compile Include="Operations\Substraction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

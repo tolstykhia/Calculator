@@ -19,6 +19,8 @@ namespace Calculator.BusinessLogic
         public decimal? GetDecision(string expressionStr)
         {
             var expressionStack = _calculatorParser.Parse(expressionStr);
+
+            if (expressionStack == null) return null;
             
             return GetResult(expressionStack, expressionStack.Pop());
         }
@@ -30,10 +32,10 @@ namespace Calculator.BusinessLogic
             {
                 operation = elem as IOperation;
                 var y = GetResult(expression, expression.Pop());
-                var x = GetResult(expression, expression.Pop());
+                var x = operation.IsFuction ? null : GetResult(expression, expression.Pop());
                 return operation.Execute(x, y);
             }
-            
+
             return (decimal) elem;
         }
     }

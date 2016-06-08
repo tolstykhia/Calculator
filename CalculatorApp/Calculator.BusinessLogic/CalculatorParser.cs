@@ -17,17 +17,28 @@ namespace Calculator.BusinessLogic
         private readonly Regex _standartNumberRegex;
         private readonly  IOperationCollection _operations;
         private readonly Regex _standartExpressionRegex;
+        private readonly string _standartFunctionsPattern;
+        private readonly Regex _standartFunctionsRegex;
 
         public CalculatorParser(IOperationCollection operations)
         {
             this._operations = operations;
             this._standartNumberPattern = @"\d+(\.|\,)?\d*";
+            
             var tmpOperationStr = @"(";
-            _operations.OperationList.ForEach(x => tmpOperationStr += @"\" + x.Description + (_operations.OperationList.IndexOf(x) != _operations.OperationList.Count - 1 ? @"|" : @"){1}"));
+            var arithOperations = _operations.OperationList.Where(x => !x.IsFuction).ToList();
+            arithOperations.ForEach(x => tmpOperationStr += @"\" + x.Description + (arithOperations.IndexOf(x) != arithOperations.Count - 1 ? @"|" : @"){1}"));
+            
+            var functions = _operations.OperationList.Where(x => x.IsFuction).ToList();
+            var tmpFunctionsStr = @"(";
+           functions.ForEach(x => tmpFunctionsStr += x.Description + (functions.IndexOf(x) != functions.Count - 1 ? @"|" : @"){1}"));
+
+            this._standartFunctionsPattern = tmpFunctionsStr;
             this._standartArithOperationPattern = tmpOperationStr;
             this._standartNumberRegex = new Regex(_standartNumberPattern);
             this._standartArithOperationRegex = new Regex(_standartArithOperationPattern);
-            this._standartExpressionRegex = new Regex(@"(" + _standartNumberPattern + @"|" + _standartArithOperationPattern + @"|\(|\))");
+            this._standartFunctionsRegex = new Regex(_standartFunctionsPattern);
+            this._standartExpressionRegex = new Regex(@"(" + _standartNumberPattern + @"|" + _standartArithOperationPattern +@"|" + _standartFunctionsPattern + @"|\(|\))");
         }
 
         public Stack<object> ConvertToPostfixNotation(string expression)
@@ -44,6 +55,12 @@ namespace Calculator.BusinessLogic
                 {
                     decimal.TryParse(matches[j].Value.Replace("(", "").Replace(")", "").Replace(".", ","), out decimalValue);
                     result.Push(decimalValue);
+                    continue;
+                }
+
+                if (_standartFunctionsRegex.IsMatch(matches[j].Value))
+                {
+                    arithOpStack.Add(matches[j].Value);
                     continue;
                 }
 
@@ -74,7 +91,7 @@ namespace Calculator.BusinessLogic
                 if (_standartArithOperationRegex.IsMatch(matches[j].Value))
                 {
                     if (matches[j].Value == "-" &&
-                        (j == 0 || _standartArithOperationRegex.IsMatch(matches[j - 1].Value) || matches[j - 1].Value == "("))
+                        (j == 0 || _standartArithOperationRegex.IsMatch(matches[j - 1].Value) || _standartFunctionsRegex.IsMatch(matches[j - 1].Value) || matches[j - 1].Value == "("))
                     {
                         result.Push(0m);
                         int countUnMinus = 1;
