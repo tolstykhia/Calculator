@@ -48,10 +48,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Calculator.Domain\Calculator.Domain.csproj">
-      <Project>{f32d85c4-c0e1-45a6-b2ec-25ef798d7241}</Project>
-      <Name>Calculator.Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Calculator.Services\Calculator.Services.csproj">
       <Project>{52317683-a8cc-4b1c-a296-becd81e03283}</Project>
       <Name>Calculator.Services</Name>
